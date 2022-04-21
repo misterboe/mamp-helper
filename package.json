@@ -1,17 +1,13 @@
 {
   "name": "mamp-tools",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "run": "node mamp-tools.js"
-  },
+  "description": "MAMP PHP Version switcher for macOS",
   "bin": {
     "ppp": "mamp-tools.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Boris Schauer <me@bschauer.de>",
+  "license": "GPL-3.0",
   "dependencies": {
     "prompts": "^2.4.2",
     "shelljs": "^0.8.5"
