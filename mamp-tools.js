@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
 const shell = require('shelljs');
+const {matchSorter} = require('match-sorter')
 
 // get php versions from mamp
 const phpVersions = () => {
@@ -14,28 +15,28 @@ const phpVersions = () => {
   // get all php versions
   fs.readdirSync(phpVersionsPath).forEach(file => {
     if (fs.statSync(path.join(phpVersionsPath, file)).isDirectory()) {
+      // remove the 'php' from the version
       phpVersions.push(file);
     }
   });
-  // create a new array with objects with name and value
-  const phpVersionsArray = phpVersions.map(version => {
-    return {
-      title: version, value: version,
-    };
-  });
-
   // return the array
-  return phpVersionsArray;
+  return phpVersions;
 };
 
 // ask user for php version
 const choosePhpVersion = async () => {
+  // map php versions to an array of objects
+  const phpVersionsArray = phpVersions().map(version => {
+    return {
+      title: version, value: version,
+    };
+  });
   // prompt user for php version
   const response = await prompts({
     type: 'select',
     name: 'phpversion',
     message: 'Choose a PHP version',
-    choices: phpVersions(),
+    choices: phpVersionsArray,
   });
 
   // return the selected php version
@@ -63,6 +64,32 @@ const checkPhpVersionFile = () => {
 };
 
 const linkPhpVersion = (phpVersion) => {
+  // check if php version exists in mamp
+  console.log('\n' +'Checking if PHP version exists in mamp...');
+  let availablePhpVersions = phpVersions();
+  if (availablePhpVersions.includes(phpVersion)) {
+    console.log('PHP version exists in mamp...');
+  } else {
+    availablePhpVersions = availablePhpVersions.map(version => {
+      // remove the 'php' from string
+      return version.replace('php', '');
+    });
+    // remove sting php to compare versions
+    const searchedPhpVersion = phpVersion.replace('php', '');
+    //  cut the string after 4 characters to find the closest version
+    const searchedPhpVersionCut = searchedPhpVersion.slice(0, 4);
+    // find the closest version
+    const bestMatch = matchSorter(availablePhpVersions, searchedPhpVersionCut)[0];
+    if (bestMatch) {
+      console.log(`No matching PHP version for ${searchedPhpVersion} found.`);
+      console.log('Linking best matching PHP version now... ' + bestMatch);
+      phpVersion = 'php' + bestMatch;
+    } else {
+      console.log(`No matching PHP version for ${searchedPhpVersion} found.`);
+      console.log('Please update your .php-version file, or install the php version in mamp...' + '\n');
+      process.exit();
+    }
+  }
   if (phpVersion) {
     console.log('\n' + `PHP Version: ${phpVersion.replace('php', '')}`);
     //log the php path

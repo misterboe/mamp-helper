@@ -1,6 +1,6 @@
 {
   "name": "mamp-tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MAMP PHP Version switcher for macOS",
   "bin": {
     "ppp": "mamp-tools.js"
@@ -9,6 +9,7 @@
   "author": "Boris Schauer <me@bschauer.de>",
   "license": "GPL-3.0",
   "dependencies": {
+    "match-sorter": "^6.3.1",
     "prompts": "^2.4.2",
     "shelljs": "^0.8.5"
   }
