@@ -1,0 +1,19 @@
+{
+  "name": "mamp-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node mamp-tools.js"
+  },
+  "bin": {
+    "ppp": "mamp-tools.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "shelljs": "^0.8.5"
+  }
+}
