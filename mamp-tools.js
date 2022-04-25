@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const prompts = require('prompts');
 const shell = require('shelljs');
-const {matchSorter} = require('match-sorter')
+const {matchSorter} = require('match-sorter');
+const {exit} = require('shelljs');
 
 // get php versions from mamp
 const phpVersions = () => {
@@ -65,7 +66,7 @@ const checkPhpVersionFile = () => {
 
 const linkPhpVersion = (phpVersion) => {
   // check if php version exists in mamp
-  console.log('\n' +'Checking if PHP version exists in mamp...');
+  console.log('\n' + 'Checking if PHP version exists in mamp...');
   let availablePhpVersions = phpVersions();
   if (availablePhpVersions.includes(phpVersion)) {
     console.log('PHP version exists in mamp...');
@@ -79,14 +80,17 @@ const linkPhpVersion = (phpVersion) => {
     //  cut the string after 4 characters to find the closest version
     const searchedPhpVersionCut = searchedPhpVersion.slice(0, 4);
     // find the closest version
-    const bestMatch = matchSorter(availablePhpVersions, searchedPhpVersionCut)[0];
+    const bestMatch = matchSorter(availablePhpVersions,
+        searchedPhpVersionCut)[0];
     if (bestMatch) {
       console.log(`No matching PHP version for ${searchedPhpVersion} found.`);
       console.log('Linking best matching PHP version now... ' + bestMatch);
       phpVersion = 'php' + bestMatch;
     } else {
       console.log(`No matching PHP version for ${searchedPhpVersion} found.`);
-      console.log('Please update your .php-version file, or install the php version in mamp...' + '\n');
+      console.log(
+          'Please update your .php-version file, or install the php version in mamp...' +
+          '\n');
       process.exit();
     }
   }
@@ -101,7 +105,8 @@ const linkPhpVersion = (phpVersion) => {
     // create symlink to mysql version in mamp bin folder
     shell.exec(`ln -sf /Applications/MAMP/Library/bin/mysql $HOME/bin/mysql`);
     // create symlink to mysqldump version in mamp bin folder
-    shell.exec(`ln -sf /Applications/MAMP/Library/bin/mysqldump $HOME/bin/mysqldump`);
+    shell.exec(
+        `ln -sf /Applications/MAMP/Library/bin/mysqldump $HOME/bin/mysqldump`);
     // shell.exec(`php -v`);
     shell.exec(`${phpPathBuilder(phpVersion)} -v`);
 
@@ -132,13 +137,37 @@ const writePhpVersionFile = (phpVersion) => {
   }
 };
 
+// read php version from composer.json
+const readPhpVersionFromComposerJson = () => {
+  // path to composer.json
+  const composerJsonPath = path.join(process.cwd(), 'composer.json');
+  // check if composer.json exists
+  if (fs.existsSync(composerJsonPath)) {
+    // read composer.json
+    const composerJson = JSON.parse(fs.readFileSync(composerJsonPath));
+    // return the php version
+    if (composerJson.config.platform.php){
+      return composerJson.config.platform.php
+    } else {
+      return false
+    }
+  }
+};
+
 // run php version selector and return the selected version
 const run = async () => {
+  // check if phpversion is set in composer.json
+  const composerPHPVersion = readPhpVersionFromComposerJson();
   // check if .php-version file exists
   const phpVersionFile = checkPhpVersionFile();
-  // if .php-version file exists
-  if (phpVersionFile) {
-    // return the php version
+
+  if (composerPHPVersion){
+    console.log('\n' + `Using PHP Version from composer.json: ${composerPHPVersion}`);
+    // return the php version from composer.json
+    return linkPhpVersion(composerPHPVersion);
+  } else if (phpVersionFile) {
+    console.log('\n' + `Using PHP Version from .php-version file: ${phpVersionFile}`);
+    // return the php version from .php-version file
     return linkPhpVersion(phpVersionFile);
   } else {
     // ask user for php version
@@ -155,7 +184,7 @@ const gooBye = () => {
 run().then(phpVersion => {
 
   // if .php-version file does not exist
-  if (!checkPhpVersionFile()) {
+  if (!checkPhpVersionFile() && !readPhpVersionFromComposerJson()) {
     // ask user if they want to create a .php-version file
     askToCreatePhpVersionFile().then(createPhpVersionFile => {
       // if user wants to create a .php-version file
