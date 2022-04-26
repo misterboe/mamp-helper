@@ -3,7 +3,8 @@
   "version": "1.0.3",
   "description": "MAMP PHP Version switcher for macOS",
   "bin": {
-    "ppp": "mamp-tools.js"
+    "ppp": "mamp-tools.js",
+    "pppl": "mamp-php-version-linker.js"
   },
   "scripts": {
     "prettier": "npx prettier --write --ignore-unknown ./"

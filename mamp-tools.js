@@ -5,7 +5,6 @@ const path = require('path')
 const prompts = require('prompts')
 const shell = require('shelljs')
 const { matchSorter } = require('match-sorter')
-const { exit } = require('shelljs')
 
 // get php versions from mamp
 const phpVersions = () => {
