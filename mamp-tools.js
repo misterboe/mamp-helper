@@ -142,8 +142,8 @@ const readPhpVersionFromComposerJson = () => {
         // read composer.json
         const composerJson = JSON.parse(fs.readFileSync(composerJsonPath))
         // return the php version
-        if (composerJson.config.platform.php) {
-            return composerJson.config.platform.php
+        if (composerJson.config?.platform?.php) {
+            return composerJson.config?.platform?.php
         } else {
             return false
         }

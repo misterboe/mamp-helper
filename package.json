@@ -9,6 +9,9 @@
   "scripts": {
     "prettier": "npx prettier --write --ignore-unknown ./"
   },
+  "engines": {
+    "node": ">=16.14.0"
+  },
   "keywords": [],
   "author": "Boris Schauer <me@bschauer.de>",
   "license": "GPL-3.0",
