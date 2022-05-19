@@ -51,6 +51,18 @@ const askToLinkImageMagick = async () => {
     return response.createSymlinksImageMagick
 }
 
+const askToLinkOthers = async () => {
+    // prompt user to create .php-version file
+    const response = await prompts({
+        type: 'confirm',
+        name: 'createSymlinksOthers',
+        message: 'Do you want to link other programs like composer?',
+    })
+
+    // return the response
+    return response.createSymlinksOthers
+}
+
 const run = async () => {
     // ask user if they want to create symlinks
     const createSymlinks = await askToLinkAllPhpVersion()
@@ -78,6 +90,12 @@ const run = async () => {
         shell.exec(`ln -sf /Applications/MAMP/Library/bin/convert /usr/local/bin/convert`)
         shell.exec(`ln -sf /Applications/MAMP/Library/bin/identify /usr/local/bin/identify`)
         shell.exec(`ln -sf /Applications/MAMP/Library/bin/composite /usr/local/bin/composite`)
+    }
+
+    const createSymlinksOthers = await askToLinkOthers()
+
+    if (createSymlinksOthers) {
+        shell.exec(`ln -sf /Applications/MAMP/bin/php/composer $HOME/bin/composer`)
     }
 }
 
