@@ -1,6 +1,6 @@
 {
   "name": "mamp-tools",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "MAMP PHP Version switcher for macOS",
   "bin": {
     "ppp": "mamp-tools.js",
