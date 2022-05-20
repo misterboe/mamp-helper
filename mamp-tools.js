@@ -150,6 +150,13 @@ const readPhpVersionFromComposerJson = () => {
     }
 }
 
+const checkNodeVersion = () => {
+    // check if node version is correct
+    const nodeVersion = shell.exec('node -v', { silent: true }).stdout
+    // check if node version is correct
+    return !!nodeVersion.includes('v16')
+}
+
 // run php version selector and return the selected version
 const run = async () => {
     // check if phpversion is set in composer.json
@@ -177,21 +184,25 @@ const gooBye = () => {
     console.log('\n' + 'Thanks for using PHP Version Selector!' + '\n')
 }
 
-run().then((phpVersion) => {
-    // if .php-version file does not exist
-    if (!checkPhpVersionFile() && !readPhpVersionFromComposerJson()) {
-        // ask user if they want to create a .php-version file
-        askToCreatePhpVersionFile().then((createPhpVersionFile) => {
-            // if user wants to create a .php-version file
-            if (createPhpVersionFile) {
-                // create .php-version file
-                writePhpVersionFile(phpVersion)
-                gooBye()
-            } else {
-                gooBye()
-            }
-        })
-    } else {
-        gooBye()
-    }
-})
+if (checkNodeVersion()) {
+    run().then((phpVersion) => {
+        // if .php-version file does not exist
+        if (!checkPhpVersionFile() && !readPhpVersionFromComposerJson()) {
+            // ask user if they want to create a .php-version file
+            askToCreatePhpVersionFile().then((createPhpVersionFile) => {
+                // if user wants to create a .php-version file
+                if (createPhpVersionFile) {
+                    // create .php-version file
+                    writePhpVersionFile(phpVersion)
+                    gooBye()
+                } else {
+                    gooBye()
+                }
+            })
+        } else {
+            gooBye()
+        }
+    })
+} else {
+    console.log('\n' + 'Please use NodeJS v16.x' + '\n')
+}
