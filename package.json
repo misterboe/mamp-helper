@@ -1,6 +1,6 @@
 {
   "name": "mamp-tools",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "MAMP PHP Version switcher for macOS",
   "bin": {
     "ppp": "mamp-tools.js",
@@ -10,7 +10,7 @@
     "prettier": "npx prettier --write --ignore-unknown ./"
   },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18.14.0"
   },
   "keywords": [],
   "author": "Boris Schauer <me@bschauer.de>",

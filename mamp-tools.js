@@ -151,10 +151,11 @@ const readPhpVersionFromComposerJson = () => {
 }
 
 const checkNodeVersion = () => {
+    shell.exec('n 18', { silent: false })
     // check if node version is correct
-    const nodeVersion = shell.exec('node -v', { silent: true }).stdout
+    const nodeVersion = shell.exec('node -v', { silent: false }).stdout
     // check if node version is correct
-    return !!nodeVersion.includes('v16')
+    return !!nodeVersion.includes('v18')
 }
 
 // run php version selector and return the selected version
@@ -204,5 +205,5 @@ if (checkNodeVersion()) {
         }
     })
 } else {
-    console.log('\n' + 'Please use NodeJS v16.x' + '\n')
+    console.log('\n' + 'Please use NodeJS v18.x' + '\n')
 }

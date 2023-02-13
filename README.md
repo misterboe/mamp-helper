@@ -15,11 +15,17 @@ ppp
 ## Requirements
 
 Be sure that your $PATH variable contains the following paths on first position:
-`/Users/yourusername/bin`  
+`/Users/yourusername/bin`
 You can check this by running the following command:
 
 ```bash
 echo $PATH
+```
+
+## Requirements to switch node version
+
+```bash
+npm i -g n
 ```
 
 if not you can add the following line at the end of your `~/.profile` file:
